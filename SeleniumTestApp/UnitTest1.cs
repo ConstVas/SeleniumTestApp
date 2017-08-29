@@ -12,17 +12,19 @@ namespace SeleniumTestApp
         public void TestMethod1()
         {
             IWebDriver driver = new ChromeDriver();
-
-            //Navigate to google page
+             
             driver.Navigate().GoToUrl("localhost");
+             
+            IWebElement loginElement = driver.FindElement(By.Name("login"));
+            loginElement.SendKeys("Пользователь 1");
 
-            //Find the Search text box UI Element
-            IWebElement element = driver.FindElement(By.Name("q"));
+            IWebElement passElement = driver.FindElement(By.Name("pass"));
+            passElement.SendKeys("111");
 
-            //Perform Ops
-            element.SendKeys("executeautomation");
-
-            //Close the browser
+            IWebElement sobmitElement = driver.FindElement(By.Name("submit"));
+            
+            sobmitElement.Click();
+             
             driver.Close();
         }
     }
