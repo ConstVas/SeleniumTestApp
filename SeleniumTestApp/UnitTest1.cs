@@ -48,6 +48,61 @@ namespace SeleniumTestApp
 
         }
 
+        [TestMethod]
+        public void CashPaymentVoucherLinkCheck()
+        {
+            var CashPaymentVoucherLink = _driver.FindElement(By.XPath("/html/body/div[1]/div/my-app/div[1]/document-market/div/div[1]/div[2]/ul/li[2]/a"));
+
+            var CashPaymentVoucherLinkText = CashPaymentVoucherLink.Text;
+
+            CashPaymentVoucherLink.Click();
+
+            _driver.Manage().Timeouts().ImplicitWait = (TimeSpan.FromSeconds(3));
+
+            var CashPaymentVoucherTitle = _driver.FindElement(By.XPath("/html/body/div[1]/div/my-app/div[1]/ng-component/cash-payment-voucher/h4"));
+
+            var CashReceiptTitleText = CashPaymentVoucherTitle.Text;
+
+            Assert.AreEqual(CashReceiptTitleText, CashPaymentVoucherLinkText);
+        }
+
+        [TestMethod]
+        public void CashPaymentVoucherAddNewDocument()
+        {
+            var CashPaymentVoucherLink = _driver.FindElement(By.XPath("/html/body/div[1]/div/my-app/div[1]/document-market/div/div[1]/div[2]/ul/li[2]/a"));
+
+            CashPaymentVoucherLink.Click();
+
+            _driver.Manage().Timeouts().ImplicitWait = (TimeSpan.FromSeconds(6));
+
+            var AddNewListButton = _driver.FindElement(By.XPath("//*[@id='qa-table-controls']/div/documentactions/div/div/button"));
+            //на кнопку не дает нажать прелоадер, надо узнать когда он изчерает
+            var angularPreloader = _driver.FindElement(By.Id("angularPreloader"));
+
+            while (angularPreloader == null) { }
+
+            AddNewListButton.Click();
+
+            var AddNewDocumentButton = _driver.FindElement(By.XPath("//*[@id=\"qa-table-controls\"]/div/documentactions/div/div/ul/li[1]/a"));
+
+            AddNewDocumentButton.Click();
+
+            _driver.Manage().Timeouts().ImplicitWait = (TimeSpan.FromSeconds(3));
+
+            var DocumentNumberInput = _driver.FindElement(By.Id("DocumentNumber"));
+
+            DocumentNumberInput.SendKeys("111");
+
+            var entryDateInput = _driver.FindElement(By.Name("entryDate"));
+
+            entryDateInput.SendKeys("11.11.2017");
+
+            var SubmitButton = _driver.FindElement(By.XPath("/html/body/div[1]/div/my-app/div[1]/ng-component/cash-payment-voucher-detail/form/div[8]/div/div/div/div/button[1]"));
+
+            SubmitButton.Click();
+
+        }
+
         [TestCleanup]
         public void TestCleanup()
         {
