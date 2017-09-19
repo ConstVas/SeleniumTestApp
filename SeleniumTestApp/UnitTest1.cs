@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 
 namespace SeleniumTestApp
 {
@@ -74,13 +74,20 @@ namespace SeleniumTestApp
             CashPaymentVoucherLink.Click();
 
             _driver.Manage().Timeouts().ImplicitWait = (TimeSpan.FromSeconds(6));
+             
+            //Подождем когда прелоадер изчезнет
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
 
-            var AddNewListButton = _driver.FindElement(By.XPath("//*[@id='qa-table-controls']/div/documentactions/div/div/button"));
-            //на кнопку не дает нажать прелоадер, надо узнать когда он изчерает
-            var angularPreloader = _driver.FindElement(By.Id("angularPreloader"));
-
-            while (angularPreloader == null) { }
-
+            IWebElement AddNewListButton = wait.Until<IWebElement>((d) => 
+            {
+                var elem = d.FindElement(By.XPath("//*[@id='qa-table-controls']/div/documentactions/div/div/button"));
+                if(elem.Displayed && elem.Enabled && elem.GetAttribute("aria-disabled") == null)
+                {
+                    return elem;
+                }
+                return null;
+            });
+            
             AddNewListButton.Click();
 
             var AddNewDocumentButton = _driver.FindElement(By.XPath("//*[@id=\"qa-table-controls\"]/div/documentactions/div/div/ul/li[1]/a"));
