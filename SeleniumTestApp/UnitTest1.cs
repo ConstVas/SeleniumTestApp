@@ -35,7 +35,7 @@ namespace SeleniumTestApp
             sobmitElement.Click();
 
             _driver.Manage().Timeouts().ImplicitWait = (TimeSpan.FromSeconds(20));
-             
+
         }
 
         [TestMethod]
@@ -74,20 +74,20 @@ namespace SeleniumTestApp
             CashPaymentVoucherLink.Click();
 
             _driver.Manage().Timeouts().ImplicitWait = (TimeSpan.FromSeconds(6));
-             
+
             //Подождем когда прелоадер изчезнет
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
 
-            IWebElement AddNewListButton = wait.Until<IWebElement>((d) => 
+            IWebElement AddNewListButton = wait.Until<IWebElement>((d) =>
             {
                 var elem = d.FindElement(By.XPath("//*[@id='qa-table-controls']/div/documentactions/div/div/button"));
-                if(elem.Displayed && elem.Enabled && elem.GetAttribute("aria-disabled") == null)
+                if (elem.Displayed && elem.Enabled && elem.GetAttribute("aria-disabled") == null)
                 {
                     return elem;
                 }
                 return null;
             });
-            
+
             AddNewListButton.Click();
 
             var AddNewDocumentButton = _driver.FindElement(By.XPath("//*[@id=\"qa-table-controls\"]/div/documentactions/div/div/ul/li[1]/a"));
@@ -100,7 +100,7 @@ namespace SeleniumTestApp
 
             DocumentNumberInput.SendKeys("111");
 
-            var entryDateInput = _driver.FindElement(By.Name("entryDate"));
+            var entryDateInput = _driver.FindElement(By.Id("entryDate"));
 
             entryDateInput.SendKeys("11.11.2017");
 
@@ -108,6 +108,19 @@ namespace SeleniumTestApp
 
             SubmitButton.Click();
 
+            //Подождем когда появится алерт документ сохранен
+            var waitCunfirm = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            bool Cunfirm = waitCunfirm.Until((d) =>
+                {
+                    var elem = d.FindElement(By.XPath("/html/body/div[1]/div/my-app/popup-dynamic/div/div/div/div[2]/simple-text-popup-content"));
+                    if (elem.Displayed && elem.Enabled && elem.GetAttribute("aria-disabled") == null)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            Assert.IsTrue(Cunfirm);
         }
 
         [TestCleanup]
